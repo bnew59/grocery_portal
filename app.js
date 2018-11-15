@@ -40,7 +40,7 @@ app.post('/list', function(req, res){
       res.json({created: result})
     })
   }
-  
+
 })
 
 function getStoreInventory(storeId, onStoreFound){
@@ -50,13 +50,13 @@ function getStoreInventory(storeId, onStoreFound){
   }).then((result)=>{
 
     if(result){
-      var store = result.get({ plain: true })    
+      var store = result.get({ plain: true })
       onStoreFound(store)
     }
     else{
       return { message: "store not found" }
     }
-    
+
   })
 
 }
@@ -67,13 +67,13 @@ app.get('/shop/store/:storeId', function(req, res){
   var userId = 1
 
   list.findAll({
-    where: { store_id: parseInt(storeId), user_id: 1 }, 
-    include: 
-      { 
+    where: { store_id: parseInt(storeId), user_id: 1 },
+    include:
+      {
         model: aisle,
-     
+
       }
-  }).then((results)=>{ 
+  }).then((results)=>{
 
     //var listEntries = results.get({plain: true})
     console.log(results[0].get({plain: true}))
@@ -85,9 +85,9 @@ app.get('/shop/store/:storeId', function(req, res){
     }
 
     getStoreInventory(storeId, onStoreFound)
-    
+
     //return res.render( 'shop', { storeId: storeId, userId: userId } )
-    
+
   }).catch(function(err){
       console.log(err)
       return res.render('error_message', { message: "something went wrong", route: "/store/" + req.params.id })
@@ -99,11 +99,11 @@ app.get('/shop/store/:storeId', function(req, res){
 app.get('/store/:id', function(req, res){
 
   function onStoreFound(store){
-    
+
     res.render('store', { store: store })
 
   }
-  
+
   var id = parseInt(req.params.id)
 
   if( id && typeof id === 'number' && !isNaN(id) ){
@@ -112,7 +112,7 @@ app.get('/store/:id', function(req, res){
   else{
     res.end()
   }
-  
+
 
 })
 
@@ -128,7 +128,7 @@ app.post('/aisle', function(req, res){
 
 app.post('/product', function(req, res){
   const { name, quantity, price, aisle, storeId } = req.body
-  
+
   product.create({
     name: name,
     quantity: parseInt(quantity),
@@ -146,6 +146,11 @@ app.post('/store', function(req, res){
   }).then((result)=>{
     res.json({created: result})
   })
+})
+
+app.get('/stores', function(req, res){
+
+  res.render("stores", {})
 })
 
 
